@@ -1,0 +1,35 @@
+table {
+  max-height: 800px;
+  max-width: 800px;
+  float: right;
+  td {
+    text-align: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+  td.ex {
+    color: red;
+  }
+  td.dot {
+    color: blue;
+  }
+  td.filled {
+    font-weight: 900;
+  }
+  td.filled.ex {
+    background-color: rosybrown;
+  }
+  td.filled.dot {
+    background-color: aquamarine;
+  }
+  td.check {
+    color: green;
+  }
+}
+
+.off {
+  background: gray;
+}

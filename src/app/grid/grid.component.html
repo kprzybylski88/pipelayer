@@ -1,0 +1,10 @@
+<table>
+  <tr *ngFor="let row of tileArr; index as i">
+    <td
+      *ngFor="let tile of row; index as j"
+      [ngClass]="{'dot': tile.type === 'dotPoint' || tile.type === 'dotFilled',
+                  'ex': tile.type === 'xPoint' || tile.type === 'xFilled',
+                  'filled' : tile.type === 'xFilled' || tile.type === 'dotFilled',
+                  'check' : tile.beingChecked}"
+      (click)="tileClicked(i, j)"><app-tile [tile]="tile"></app-tile></td>
+  </tr>
