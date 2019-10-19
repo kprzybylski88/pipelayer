@@ -16,7 +16,7 @@ speed-measure-plugin.json
 
 #environment settings
 
-/environment/*
+/environments/*
 
 # IDEs and editors
 /.idea
