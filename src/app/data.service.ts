@@ -35,7 +35,7 @@ export class DataService {
     );
   }
   public putGridAndEndMove(gameKey: string, gameState: Game, stateToSave: string) {
-    console.log(gameKey, stateToSave);
+    // console.log(gameKey, stateToSave);
     return from(this.firestore.collection('games').doc(gameKey).update({
       game: gameState
     }));

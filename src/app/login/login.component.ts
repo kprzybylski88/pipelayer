@@ -29,13 +29,11 @@ export class LoginComponent implements OnInit {
     if (this.gameKey) {
       this.dataService.getPlayerKeys(this.gameKey).pipe(take(1)).subscribe(r => {
         this.playerKeys = (r.payload.data() as IPayload).game;
-        console.log(this.playerKeys);
       });
     }
   }
 
   authorize() {
-    console.log(this.playerKeys);
     const key = this.playerKeyControl.value;
     if (key === this.playerKeys.dotKey) {
       console.log('You are a dot');

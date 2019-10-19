@@ -57,7 +57,7 @@ export class GameService {
   }
 
   public startSubscription(gameKey: string) {
-    console.log(this.gameObject);
+    // console.log(this.gameObject);
     this.dataService.listenToUpdates(gameKey).subscribe({
       next: (r: any) => {
         const newGameState = r.game as Game;
@@ -99,7 +99,7 @@ export class GameService {
       this.gameObject.grid = JSON.stringify(this.tileArr);
       this.gameObject.state = this.gameState;
       this.dataService.putGridAndEndMove(this.gameKey, this.gameObject, this.gameState).subscribe(r => console.log(r));
-      console.log(this.gameObject);
+      // console.log(this.gameObject);
       this.gameState$.next(this.gameState);
       this.tileArr$.next(this.tileArr);
     }
