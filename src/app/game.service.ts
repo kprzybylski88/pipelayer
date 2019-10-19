@@ -88,6 +88,9 @@ export class GameService {
       if (this.checkForWin(fieldTypeToFill)) {
         this.gameState = GameState.win;
         this.gameState$.next(this.gameState);
+        this.gameObject.grid = JSON.stringify(this.tileArr);
+        this.gameObject.state = this.gameState;
+        this.dataService.putGridAndEndMove(this.gameKey, this.gameObject, this.gameState).subscribe(r => console.log(r));
         alert('Victory ' + fieldTypeToFill);
         return;
       }
