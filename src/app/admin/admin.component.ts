@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService, IPayload } from '../data.service';
 import { environment } from '../../environments/environment';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin',
@@ -11,8 +12,8 @@ export class AdminComponent implements OnInit {
 
   gameUrl: string;
 
-  keys = {
-    exKey: '',
+  keys: {dotKey: string, xKey: string} = {
+    xKey: '',
     dotKey: ''
   };
 
@@ -23,10 +24,10 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
   }
   generateCodes() {
-    this.dataService.generateCodes().subscribe({
+    this.dataService.generateCodes().pipe(take(1)).subscribe({
       next: r => {
         this.gameUrl = `${environment.appUrl}login/${r.id}`;
-        this.dataService.getPlayerKeys(r.id).subscribe(rr => this.keys = (rr.payload.data() as IPayload).game);
+        this.dataService.getPlayerKeys(r.id).pipe(take(1)).subscribe(rr => this.keys = (rr.payload.data() as IPayload).game);
       }
     });
   }

@@ -16,13 +16,13 @@ export class DataService {
   public generateCodes() {
     const seed = Math.random();
     const md5 = new Md5();
-    const exKeyMd5 = md5.appendStr(seed.toString()).end();
+    const xKeyMd5 = md5.appendStr(seed.toString()).end();
     const dotKeyMd5 = md5.appendStr((seed + 1).toString()).end();
     return from(
       this.firestore.collection('games').add({
         game: {
           dotKey: dotKeyMd5,
-          exKey: exKeyMd5,
+          xKey: xKeyMd5,
           grid: '',
           state: '',
         }
@@ -48,6 +48,6 @@ export class DataService {
 export interface IPayload {
   game: {
     dotKey: string;
-    exKey: string;
+    xKey: string;
   };
 }
