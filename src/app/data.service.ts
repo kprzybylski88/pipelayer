@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {Md5} from 'ts-md5';
 import { from } from 'rxjs';
+import {exhaustMap, tap} from 'rxjs/operators';
+import { Game } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,9 @@ export class DataService {
       this.firestore.collection('games').add({
         game: {
           dotKey: dotKeyMd5,
-          exKey: exKeyMd5
+          exKey: exKeyMd5,
+          grid: '',
+          state: '',
         }
       }));
   }
@@ -30,4 +34,20 @@ export class DataService {
       this.firestore.collection(`games`).doc(gameKey).snapshotChanges()
     );
   }
+  public putGridAndEndMove(gameKey: string, gameState: Game, stateToSave: string) {
+    console.log(gameKey, stateToSave);
+    return from(this.firestore.collection('games').doc(gameKey).update({
+      game: gameState
+    }));
+  }
+  public listenToUpdates(gameKey: string) {
+    return this.firestore.collection('games').doc(gameKey).valueChanges().pipe(tap(r => console.log(r)));
+  }
+}
+
+export interface IPayload {
+  game: {
+    dotKey: string;
+    exKey: string;
+  };
 }

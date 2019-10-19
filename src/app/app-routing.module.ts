@@ -7,7 +7,7 @@ import { LoginComponent } from './login/login.component';
 const routes: Routes = [
   {path: 'game', component: GridComponent},
   {path: 'admin', component: AdminComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'login/:gameKey', component: LoginComponent},
 ];
 
 @NgModule({

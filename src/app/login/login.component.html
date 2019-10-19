@@ -1,1 +1,8 @@
-<p>login works!</p>
+<div *ngIf="gameKey" class="player-auth">
+  <mat-form-field class="example-full-width">
+    <input [formControl] ="playerKeyControl" matInput placeholder="Player code" (keyup.enter)="authorize()">
+  </mat-form-field>
+  <button mat-icon-button color="primary" (click)="authorize()">
+    <mat-icon>send</mat-icon>
+  </button>
+</div>

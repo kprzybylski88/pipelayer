@@ -1,46 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { WinChecker, beingChecked } from './win-checker.class';
+import { DataService } from './data.service';
+import { Tile, TileType, GameState, Game } from './models';
 
-export interface Tile {
-  type: TileType;
-  mark: string;
-  beingChecked?: boolean;
-}
-
-export enum TileType {
-  off = 'off',
-  empty = 'empty',
-  xPoint = 'xPoint',
-  dotPoint = 'dotPoint',
-  xFilled = 'xFilled',
-  dotFilled = 'dotFilled',
-}
-
-enum GameState {
-  dot = 'dot',
-  x = 'x',
-  win = 'win'
-}
-
-enum Connection {
-  left = 'left',
-  right = 'right',
-  up = 'up',
-  down = 'down',
-}
-
-interface Node {
-  x: number;
-  y: number;
-  connections: Point[];
-  traversed?: boolean;
-}
-
-interface Point {
-  x: number;
-  y: number;
-}
 @Injectable({
   providedIn: 'root'
 })
@@ -49,19 +12,25 @@ export class GameService {
   public realDim = (this.dim * 2) - 1;
   public tileArr: Array<Array<Tile>> = [];
   public tileArr$ = new BehaviorSubject<any>(null);
-  public gameState: GameState = GameState.dot;
-
-  constructor() {
-    beingChecked.subscribe({
-      next: r => {
-        if (r) {
-          this.tileArr[r.y][r.x].beingChecked = true;
-          setTimeout(() => {
-            this.tileArr[r.y][r.x].beingChecked = false;
-          }, 2000);
-        }
-      }
-    });
+  public gameState = GameState.dot;
+  public gameState$ = new BehaviorSubject<GameState>(this.gameState);
+  public playerMark: 'x' | 'dot';
+  public gameKey: string;
+  public playerKey: string;
+  public gameObject: Game;
+  constructor(
+    private dataService: DataService,
+  ) {
+    // beingChecked.subscribe({
+    //   next: r => {
+    //     if (r) {
+    //       this.tileArr[r.y][r.x].beingChecked = true;
+    //       setTimeout(() => {
+    //         this.tileArr[r.y][r.x].beingChecked = false;
+    //       }, 2000);
+    //     }
+    //   }
+    // });
     for (let i = 0; i < this.realDim; ++i) {
       const row: Tile[] = [];
       for (let j = 0; j < this.realDim; ++j) {
@@ -86,12 +55,29 @@ export class GameService {
     }
     this.tileArr$.next(this.tileArr);
   }
+
+  public startSubscription(gameKey: string) {
+    this.dataService.listenToUpdates(gameKey).subscribe({
+      next: (r: any) => {
+        const newGameState = r.game as Game;
+        if (newGameState.grid.length) {
+          this.tileArr = JSON.parse(newGameState.grid);
+          this.gameState = newGameState.state;
+          this.tileArr$.next(true);
+          this.gameState$.next(this.gameState);
+        }
+      }
+    });
+  }
   tileClicked(i: number, j: number) {
     const metric = new Date().getTime();
-    if (this.tileArr[i][j].type !== TileType.empty ) {
+    if (this.gameState === GameState.win) {
       return;
     }
-    if (this.gameState === GameState.win) {
+    if (this.gameState !== this.playerMark) {
+      return;
+    }
+    if (this.tileArr[i][j].type !== TileType.empty ) {
       return;
     }
     const fieldTypeToFill = this.gameState === GameState.dot ? TileType.dotFilled : TileType.xFilled;
@@ -101,10 +87,15 @@ export class GameService {
       this.tileArr[i][j].type = fieldTypeToFill;
       if (this.checkForWin(fieldTypeToFill)) {
         this.gameState = GameState.win;
+        this.gameState$.next(this.gameState);
         alert('Victory ' + fieldTypeToFill);
         return;
       }
       this.gameState = this.gameState === GameState.dot ? GameState.x : GameState.dot;
+      this.gameObject.grid = JSON.stringify(this.tileArr);
+      this.gameObject.state = this.gameState;
+      this.dataService.putGridAndEndMove(this.gameKey, this.gameObject, this.gameState).subscribe(r => console.log(r));
+      this.gameState$.next(this.gameState);
       this.tileArr$.next(this.tileArr);
     }
     console.log(new Date().getTime() - metric);
@@ -124,7 +115,7 @@ export class GameService {
   }
 
   private checkForWin(filedType: TileType) {
-    const pointTile = filedType === TileType.dotFilled ? TileType.dotPoint : TileType.xPoint;
+    // const pointTile = filedType === TileType.dotFilled ? TileType.dotPoint : TileType.xPoint;
     const winGrid = this.tileArr.map( (l0, i) => {
       return l0.map((l1, j) => {
         return {type: l1.type, x: j, y: i, traversed: false};
