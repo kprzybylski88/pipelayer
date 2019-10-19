@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -7,12 +9,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+  gameUrl: string;
+
+  keys = {
+    exKey: '',
+    dotKey: ''
+  };
+
+  constructor(
+    private dataService: DataService
+  ) { }
 
   ngOnInit() {
   }
   generateCodes() {
-
+    this.dataService.generateCodes().subscribe({
+      next: r => {
+        this.gameUrl = `${environment.appUrl}${r.id}`;
+        this.dataService.getPlayerKeys(r.id).subscribe(rr => this.keys = (rr.payload.data() as IPayload).game);
+      }
+    });
   }
+}
 
+interface IPayload {
+  game: {
+    dotKey: string;
+    exKey: string;
+  };
 }
