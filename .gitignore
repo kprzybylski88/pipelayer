@@ -19,6 +19,11 @@ speed-measure-plugin.json
 **/src/environments/environment.prod.ts
 **/src/environments/environment.ts
 
+#firebase settings
+**/.firebaserc
+**/firebase.json
+**/.firebase/*
+
 # IDEs and editors
 /.idea
 .project
