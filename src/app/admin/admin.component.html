@@ -1,5 +1,5 @@
 <h2>Admin panel</h2>
-<div class="game-url">{{ gameUrl }}</div>
-<div class="code-x"><span>{{keys.exKey}}</span></div>
-<div class="code-dot"><span>{{keys.dotKey}}</span></div>
+<div class="game-url"><h4>game url: </h4><span>{{ gameUrl }}</span></div>
+<div class="code-x"><h4>X code: </h4><span>{{keys.exKey}}</span></div>
+<div class="code-dot"><h4>Dot code: </h4><span>{{keys.dotKey}}</span></div>
 <button mat-raised-button color="primary"(click)="generateCodes()">Generate codes!</button>
