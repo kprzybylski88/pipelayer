@@ -8,3 +8,9 @@
                   'check' : tile.beingChecked}"
       (click)="tileClicked(i, j)"><app-tile [tile]="tile"></app-tile></td>
   </tr>
+</table>
+  <!-- <mat-grid-list style = "height: 100%" [cols]="tileArr.length" rowHeight="1:1">
+    <ng-container *ngFor="let row of tileArr; index as i">
+      <mat-grid-tile *ngFor="let tile of row; index as j" (click)="tileClicked(i, j)"><app-tile [tile]="tile"></app-tile></mat-grid-tile>
+    </ng-container>
+  </mat-grid-list> -->

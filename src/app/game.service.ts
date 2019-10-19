@@ -70,11 +70,11 @@ export class GameService {
         switch (true) {
           case (j % 2 === 1 && i % 2 === 0):
             tileType = TileType.dotPoint;
-            markType = '●';
+            markType = 'radio_button_unchecked';
             break;
           case (j % 2 === 0 && i % 2 === 1):
             tileType = TileType.xPoint;
-            markType = 'X';
+            markType = 'close';
             break;
           default:
             tileType = TileType.empty;
@@ -118,7 +118,7 @@ export class GameService {
     } else if (this.tileArr[i][j - 1] && this.tileArr[i][j + 1]
             && this.tileArr[i][j - 1].type === tileType
             && this.tileArr[i][j + 1].type === tileType) {
-      return '—';
+      return 'remove';
     }
     return null;
   }
